@@ -1,4 +1,5 @@
 import { REPLAY_CONFIG } from "../../config.js";
+import { loadReplayData } from "../stores/replayDataStore.js";
 
 const REPORT_COLORS = {
   ink: "#1f1f1f",
@@ -85,14 +86,7 @@ async function buildRealGameStatsReport() {
 }
 
 async function fetchReplayData() {
-  const replayUrl = new URL(REPLAY_CONFIG.replayUrl, window.location.href).toString();
-  const response = await fetch(replayUrl, { cache: "force-cache" });
-
-  if (!response.ok) {
-    throw new Error(`Impossible de charger le companion reel (${response.status}).`);
-  }
-
-  return response.json();
+  return loadReplayData(REPLAY_CONFIG.replayUrl);
 }
 
 function buildTimeline(replayData) {

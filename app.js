@@ -1,4 +1,5 @@
 import { REPLAY_CONFIG as DEFAULT_REPLAY_CONFIG } from "./config.js";
+import { loadMasterConfigData, loadReplayData } from "./src/stores/replayDataStore.js";
 
 export function mountReplayViewer(rootElement, configOverrides = {}) {
 if (!(rootElement instanceof HTMLElement)) {
@@ -489,32 +490,11 @@ function setError(message) {
 }
 
 async function loadMasterConfig(url) {
-  try {
-    const response = await fetch(resolveUrl(url), {
-      cache: "no-store",
-      signal: abortController.signal
-    });
-    if (!response.ok) {
-      throw new Error();
-    }
-    return await response.json();
-  } catch (_error) {
-    return DEFAULT_MASTER_CONFIG;
-  }
+  return loadMasterConfigData(url);
 }
 
 async function loadReplay(url) {
-  const response = await fetch(resolveUrl(url), {
-    cache: "no-store",
-    signal: abortController.signal
-  });
-  if (!response.ok) {
-    throw new Error(`Impossible de charger le replay: HTTP ${response.status} ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  validateReplay(data);
-  return data;
+  return loadReplayData(url);
 }
 
 async function loadReplaySource(config) {
